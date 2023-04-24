@@ -2,6 +2,7 @@
 #include "WorldTransform.h"
 #include "ViewProjection.h"
 #include "Model.h"
+#include "Input.h"
 
 
 /// <summary>
@@ -15,6 +16,9 @@ public:
 	/// <param name="model_"></param>
 	/// <param name="textureHandle_"></param>
 	void Initialize(Model* model, uint32_t textureHandle);
+	
+	Input* input_ = nullptr;
+
 	
 	/// <summary>
 	/// 更新
