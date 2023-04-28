@@ -9,6 +9,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "Player.h"
+#include "DebugCamera.h"
 
 
 /// <summary>
@@ -34,6 +35,8 @@ public: // メンバ関数
 	/// 初期化
 	/// </summary>
 	void Initialize();
+	DebugCamera* debugCamera_ = nullptr;
+	bool isDebugCameraActive_ = false;
 
 	/// <summary>
 	/// 毎フレーム処理
