@@ -13,6 +13,15 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	input_ = Input::GetInstance();
 }
 
+void Player::Rotate() {
+	const float kRotSpeed = 0.02f;
+	if (input_->PushKey(DIK_A)) {
+		worldTranceform_.rotation_.y -= kRotSpeed;
+	} else if (input_->PushKey(DIK_D)) {
+		worldTranceform_.rotation_.y += kRotSpeed;
+	}
+}
+
 void Player::Update() {
 	worldTranceform_.TransferMatrix();
 	
@@ -29,6 +38,12 @@ void Player::Update() {
 		move.y += kCharacterSpeed;
 	} else if (input_->PushKey(DIK_DOWN)) {
 		move.y -= kCharacterSpeed;
+	}
+	
+	Attack();
+
+	if (bullet_) {
+		bullet_->Update();	
 	}
 
 	const float kMoveLimitX = 20.0f;
@@ -63,4 +78,17 @@ void Player::Update() {
 
 void Player::Draw(ViewProjection viewProjection) {
 	model_->Draw(worldTranceform_, viewProjection, textureHandle_);
+	 
+	if (bullet_) {
+		bullet_->Draw(viewProjection);
+	}
+}
+
+void Player::Attack() {
+	if (input_->TriggerKey(DIK_Z)) {
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(model_, worldTranceform_.translation_);
+
+		bullet_ = newBullet;
+	}
 }
