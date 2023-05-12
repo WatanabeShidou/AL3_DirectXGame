@@ -13,7 +13,11 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	input_ = Input::GetInstance();
 }
 
-Player::~Player() { delete bullet_; }
+Player::~Player() { 
+	for (PlayerBullet* bullet : bullets_) {
+		delete bullet;
+	}
+}
 
 void Player::Rotate() {
 	const float kRotSpeed = 0.02f;
@@ -44,8 +48,8 @@ void Player::Update() {
 	
 	Attack();
 
-	if (bullet_) {
-		bullet_->Update();	
+	for (PlayerBullet* bullet : bullets_){
+		bullet->Update();	
 	}
 
 	const float kMoveLimitX = 20.0f;
@@ -81,21 +85,16 @@ void Player::Update() {
 void Player::Draw(ViewProjection viewProjection) {
 	model_->Draw(worldTranceform_, viewProjection, textureHandle_);
 	 
-	if (bullet_) {
-		bullet_->Draw(viewProjection);
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Draw(viewProjection);
 	}
 }
 
 void Player::Attack() {
 	if (input_->TriggerKey(DIK_Z)) {
 		PlayerBullet* newBullet = new PlayerBullet();
-		if (bullet_) {
-			delete bullet_;
-			bullet_ = nullptr;
-		}
-		
 		newBullet->Initialize(model_, worldTranceform_.translation_);
 
-		bullet_ = newBullet;
+		bullets_.push_back(newBullet);
 	}
 }
