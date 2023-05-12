@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "Input.h"
 #include "PlayerBullet.h"
+#include <list>
 
 
 /// <summary>
@@ -19,7 +20,12 @@ public:
 	void Initialize(Model* model, uint32_t textureHandle);
 	
 	Input* input_ = nullptr;
+	std::list<PlayerBullet*> bullets_;
 	
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~Player();
 
 	/// <summary>
 	/// 回転

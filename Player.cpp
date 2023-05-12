@@ -13,6 +13,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	input_ = Input::GetInstance();
 }
 
+Player::~Player() { delete bullet_; }
+
 void Player::Rotate() {
 	const float kRotSpeed = 0.02f;
 	if (input_->PushKey(DIK_A)) {
@@ -87,6 +89,11 @@ void Player::Draw(ViewProjection viewProjection) {
 void Player::Attack() {
 	if (input_->TriggerKey(DIK_Z)) {
 		PlayerBullet* newBullet = new PlayerBullet();
+		if (bullet_) {
+			delete bullet_;
+			bullet_ = nullptr;
+		}
+		
 		newBullet->Initialize(model_, worldTranceform_.translation_);
 
 		bullet_ = newBullet;
