@@ -91,7 +91,7 @@ void Player::Draw(ViewProjection viewProjection) {
 }
 
 void Player::Attack() {
-	if (input_->TriggerKey(DIK_Z)) {
+	if (input_->TriggerKey(DIK_SPACE)) {
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialize(model_, worldTranceform_.translation_);
 
