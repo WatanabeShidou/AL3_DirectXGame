@@ -10,6 +10,7 @@
 #include "WorldTransform.h"
 #include "Player.h"
 #include "DebugCamera.h"
+#include "Enemy.h"
 
 
 /// <summary>
@@ -23,6 +24,7 @@ public: // メンバ関数
 	/// </summary>
 	GameScene();
 	Player* player_ = nullptr;
+	Enemy* enemy_ = nullptr;
 	Model* model_ = nullptr;
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;

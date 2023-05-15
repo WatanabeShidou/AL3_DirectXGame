@@ -9,6 +9,7 @@ GameScene::~GameScene() {
 	delete model_;
 	delete player_;
 	delete debugCamera_;
+	delete enemy_;
 }
 
 void GameScene::Initialize() {
@@ -20,6 +21,15 @@ void GameScene::Initialize() {
 	model_ = Model::Create();
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
+
+	Vector3 enemy{
+		0,
+		0,
+		50,
+	};
+
+	enemy_ = new Enemy();
+	enemy_->Initialize(model_,enemy);
 
 	player_ = new Player();
 	player_->Initialize(model_,textureHandle_);
@@ -33,6 +43,8 @@ void GameScene::Update()
 {
 	player_->Update();
 	player_->Rotate();
+	
+	enemy_->Update();
 	
 	#ifdef _DEBUG
 	if (input_->TriggerKey(DIK_Z)) {
@@ -78,6 +90,7 @@ void GameScene::Draw() {
 	/// </summary>
 	//model_->Draw(worldTransform_, viewProjection_, textureHandle_);
 	player_->Draw(viewProjection_);
+	enemy_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
