@@ -29,6 +29,14 @@ void Player::Rotate() {
 }
 
 void Player::Update() {
+	bullets_.remove_if([](PlayerBullet* bullet) { 
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+	
 	worldTranceform_.TransferMatrix();
 	
 	Vector3 move = {0, 0, 0};
@@ -92,8 +100,13 @@ void Player::Draw(ViewProjection viewProjection) {
 
 void Player::Attack() {
 	if (input_->TriggerKey(DIK_SPACE)) {
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0, 0, kBulletSpeed);
+		
+		velocity = TransformNormal(velocity, worldTranceform_.matWorld_);
+		
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTranceform_.translation_);
+		newBullet->Initialize(model_, worldTranceform_.translation_,velocity);
 
 		bullets_.push_back(newBullet);
 	}
