@@ -23,7 +23,7 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 
 	Vector3 enemy{
-		0,
+		30,
 		2,
 		50,
 	};
