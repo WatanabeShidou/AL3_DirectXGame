@@ -13,7 +13,21 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 void Enemy::Update() {
 	
 	worldTranceform_.UpdateMatrix();
-	worldTranceform_.translation_.z -= 1;
+	
+	switch(phase_) { 
+	case Phase::Approach:
+	default:
+		worldTranceform_.translation_.z -= 0.3f;
+		if (worldTranceform_.translation_.z < 0.0f) {
+			phase_ = Phase::Leave;
+		}
+		break;
+	case Phase::Leave:
+		worldTranceform_.translation_.y += 0.3f;
+		worldTranceform_.translation_.x -= 0.3f;
+		break;
+	}
+
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection) 

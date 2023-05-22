@@ -10,6 +10,13 @@
 /// </summary>
 class Enemy {
 public:
+	enum class Phase {
+		start,
+		Approach,
+		Leave,
+	};
+	
+	
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -35,4 +42,5 @@ private:
 	Model* model_ = nullptr;
 
 	uint32_t textureHandle_ = 0;
+	Phase phase_ = Phase::start;
 };

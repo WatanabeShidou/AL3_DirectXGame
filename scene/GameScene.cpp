@@ -24,7 +24,7 @@ void GameScene::Initialize() {
 
 	Vector3 enemy{
 		0,
-		0,
+		2,
 		50,
 	};
 
