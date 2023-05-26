@@ -13,16 +13,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	input_ = Input::GetInstance();
 }
 
-Vector3 Player::GetWorldPosition() 
-{ 
-	Vector3 worldPos;
 
-	worldPos.x = worldTranceform_.translation_.x;
-	worldPos.y = worldTranceform_.translation_.y;
-	worldPos.z = worldTranceform_.translation_.z;
-
-	return worldPos;
-}
 
 Player::~Player() { 
 	for (PlayerBullet* bullet : bullets_) {

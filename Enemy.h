@@ -35,7 +35,15 @@ public:
 	void Initialize(Model* model, const Vector3& position);
 	Vector3 velocity_;
 	void SetPlayer(Player* player) { player_ = player; }
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() {
+		Vector3 worldPos;
+
+		worldPos.x = worldTranceform_.translation_.x;
+		worldPos.y = worldTranceform_.translation_.y;
+		worldPos.z = worldTranceform_.translation_.z;
+
+		return worldPos;
+	};
 	/// <summary>
 	/// 更新
 	/// </summary>

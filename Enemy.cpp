@@ -19,17 +19,6 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 	
 }
 
-Vector3 Enemy::GetWorldPosition() 
-{
-	Vector3 worldPos;
-
-	worldPos.x = worldTranceform_.translation_.x;
-	worldPos.y = worldTranceform_.translation_.y;
-	worldPos.z = worldTranceform_.translation_.z;
-
-	return worldPos;
-}
-
 void Enemy::Update() {
 	bullets_.remove_if([](EnemyBullet* bullet) {
 		if (bullet->IsDead()) {
@@ -70,22 +59,20 @@ void Enemy::Draw(const ViewProjection& viewProjection)
 }
 
 void Enemy::Attack() {
+	assert(player_);
 	timer_ += 1;
+	const float kBulletSpeed = 1.0f;
+	end = player_->GetWorldPosition();
+	start = GetWorldPosition();
+	sub.x = end.x - start.x;
+	sub.y = end.y - start.y;
+	sub.z = end.z - start.z;
+
+	float length = sqrt(sub.x * sub.x + sub.y * sub.y + sub.z * sub.z);
+	Vector3 dir(sub.x / length, sub.y / length, sub.z / length);
+	Vector3 velocity(dir.x * kBulletSpeed, dir.y * kBulletSpeed, dir.z * kBulletSpeed);
 	if (timer_ == 60)	
 	{
-		assert(player_);
-		const float kBulletSpeed = 1.0f;
-		end = player_->GetWorldPosition();
-		start = GetWorldPosition();
-		sub.x = start.x - end.x;
-		sub.y = start.y - end.y;
-		sub.z = start.z - end.z;
-		
-		float length = sqrt(sub.x * sub.x + sub.y * sub.y + sub.z * sub.z);
-		Vector3 dir(sub.x / length, sub.y / length, sub.z / length);
-
-		Vector3 velocity(dir.x * kBulletSpeed, dir.y * kBulletSpeed, dir.z * kBulletSpeed);
-
 		velocity = TransformNormal(velocity, worldTranceform_.matWorld_);
 
 		EnemyBullet* newBullet = new EnemyBullet();
