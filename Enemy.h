@@ -8,12 +8,18 @@
 #include <list>
 #include "Mathutility.h"
 
+
+class Player;
 /// <summary>
 /// 敵
 /// </summary>
 class Enemy {
 public:
+	
 	int timer_;
+	Vector3 start;
+	Vector3 end;
+	Vector3 sub;
 	enum class Phase {
 		start,
 		Approach,
@@ -28,7 +34,8 @@ public:
 	/// <param name="position"></param>
 	void Initialize(Model* model, const Vector3& position);
 	Vector3 velocity_;
-
+	void SetPlayer(Player* player) { player_ = player; }
+	Vector3 GetWorldPosition();
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -46,7 +53,7 @@ private:
 	WorldTransform worldTranceform_;
 
 	Model* model_ = nullptr;
-
+	Player* player_ = nullptr;
 	uint32_t textureHandle_ = 0;
 	EnemyBullet* bullet_ = nullptr;
 	Phase phase_ = Phase::start;

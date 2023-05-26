@@ -19,7 +19,7 @@ public:
 	/// <param name="model_"></param>
 	/// <param name="textureHandle_"></param>
 	void Initialize(Model* model, uint32_t textureHandle);
-	
+	Vector3 GetWorldPosition();
 	Input* input_ = nullptr;
 	std::list<PlayerBullet*> bullets_;
 	
