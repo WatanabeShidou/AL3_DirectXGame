@@ -16,7 +16,7 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	enemy_->SetPlayer(player_);
+	
 	textureHandle_ = TextureManager::Load("sumire2.png");
 	model_ = Model::Create();
 	worldTransform_.Initialize();
@@ -37,6 +37,8 @@ void GameScene::Initialize() {
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
+
+	enemy_->SetPlayer(player_);
 }
 
 void GameScene::Update() 
