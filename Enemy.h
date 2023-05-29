@@ -15,7 +15,10 @@ class Player;
 /// </summary>
 class Enemy {
 public:
-	
+	void OnCollision();
+	const float GetRadius() { return radius_; }
+	const float radius_ = 1.0f;
+	const std::list<EnemyBullet*>& GetBullet() { return bullets_; }
 	int timer_;
 	Vector3 start;
 	Vector3 end;

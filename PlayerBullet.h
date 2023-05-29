@@ -19,6 +19,18 @@ public:
 	int32_t deathTimer_ = kLifeTime;
 	bool isDead_ = false;
 	bool IsDead() const { return isDead_; }
+	void OnCollision();
+	const float GetRadius() { return radius_; }
+	const float radius_ = 1.0f;
+	Vector3 GetWorldPosition() {
+		Vector3 worldPos;
+
+		worldPos.x = worldTranceform_.translation_.x;
+		worldPos.y = worldTranceform_.translation_.y;
+		worldPos.z = worldTranceform_.translation_.z;
+
+		return worldPos;
+	};
 	/// <summary>
 	/// 更新
 	/// </summary>

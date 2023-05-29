@@ -28,9 +28,12 @@ public:
 
 		return worldPos;
 	};
+	void OnCollision();
+	const float GetRadius() { return radius_; }
+	const float radius_ = 1.0f;
 	Input* input_ = nullptr;
 	std::list<PlayerBullet*> bullets_;
-	
+	const std::list<PlayerBullet*>& GetBullet() { return bullets_; }
 	/// <summary>
 	/// デストラクタ
 	/// </summary>

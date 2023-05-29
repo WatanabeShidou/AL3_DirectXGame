@@ -11,6 +11,8 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 	velocity_ = velocity;
 }
 
+void EnemyBullet::OnCollision() { isDead_ = true; }
+
 void EnemyBullet::Update() {
 	worldTranceform_.translation_.x -= velocity_.x;
 	worldTranceform_.translation_.y -= velocity_.y;

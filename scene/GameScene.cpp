@@ -5,6 +5,55 @@
 
 GameScene::GameScene() {}
 
+void GameScene::CheckAllCollisions() 
+{ 
+	Vector3 posA, posB;
+
+	const std::list<PlayerBullet*>& playerBullets = player_->GetBullet();
+	const std::list<EnemyBullet*>& enemyBullets = enemy_->GetBullet();
+
+	//自キャラと敵弾の当たり判定
+	posA = player_->GetWorldPosition();
+	for (EnemyBullet* bullets: enemyBullets) {
+		posB = bullets->GetWorldPosition();
+
+		float dis = (posB.x - posA.x) * (posB.x - posA.x) + 
+					(posB.y - posA.y) * (posB.y - posA.y) +
+		            (posB.z - posA.z) * (posB.z - posA.z);
+		if (dis <= (player_->GetRadius() + bullets->GetRadius())*2) {
+			player_->OnCollision();
+			bullets->OnCollision();
+		}
+	}
+	//敵キャラと自弾の判定
+	posA = enemy_->GetWorldPosition();
+	for (PlayerBullet* bullets : playerBullets) {
+		posB = bullets->GetWorldPosition();
+		float dis = (posB.x - posA.x) * (posB.x - posA.x) + 
+					(posB.y - posA.y) * (posB.y - posA.y) +
+		            (posB.z - posA.z) * (posB.z - posA.z);
+		if (dis <= (player_->GetRadius() + bullets->GetRadius()) * 2) {
+			enemy_->OnCollision();
+			bullets->OnCollision();
+		}
+	}
+	
+	//敵弾と自弾の判定
+	for (PlayerBullet* playerbullets : playerBullets) {
+		posA = playerbullets->GetWorldPosition();
+		for (EnemyBullet* enemybullets : enemyBullets) {
+			posB = enemybullets->GetWorldPosition();
+			float dis = (posB.x - posA.x) * (posB.x - posA.x) +
+			            (posB.y - posA.y) * (posB.y - posA.y) +
+			            (posB.z - posA.z) * (posB.z - posA.z);
+			if (dis <= (playerbullets->GetRadius() + enemybullets->GetRadius()) * 2) {
+				enemybullets->OnCollision();
+				playerbullets->OnCollision();
+			}
+		}
+	}
+}
+
 GameScene::~GameScene() {
 	delete model_;
 	delete player_;
@@ -45,7 +94,7 @@ void GameScene::Update()
 {
 	player_->Update();
 	player_->Rotate();
-	
+	CheckAllCollisions();
 	enemy_->Update();
 	
 	#ifdef _DEBUG

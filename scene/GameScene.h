@@ -28,6 +28,7 @@ public: // メンバ関数
 	Model* model_ = nullptr;
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
+	void CheckAllCollisions();
 	/// <summary>
 	/// デストラクタ
 	/// </summary>

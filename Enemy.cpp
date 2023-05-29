@@ -2,6 +2,8 @@
 #include <cassert>
 #include "Player.h"
 
+void Enemy::OnCollision() {}
+
 Enemy::~Enemy() {
 	for (EnemyBullet* bullet : bullets_) {
 		delete bullet;
