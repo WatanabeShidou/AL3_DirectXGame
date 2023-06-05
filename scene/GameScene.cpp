@@ -59,6 +59,8 @@ GameScene::~GameScene() {
 	delete player_;
 	delete debugCamera_;
 	delete enemy_;
+	delete skydome_;
+	delete modelSkydome_;
 }
 
 void GameScene::Initialize() {
@@ -82,6 +84,10 @@ void GameScene::Initialize() {
 
 	player_ = new Player();
 	player_->Initialize(model_,textureHandle_);
+	
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	skydome_ = new Skydome();
+	skydome_->Initialize(modelSkydome_);
 
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -96,11 +102,15 @@ void GameScene::Update()
 	player_->Rotate();
 	CheckAllCollisions();
 	enemy_->Update();
+	skydome_->Update();
 	
 	#ifdef _DEBUG
-	if (input_->TriggerKey(DIK_Z)) {
+	if (input_->PushKey(DIK_Z)) {
 		isDebugCameraActive_ = true;
-	}
+	} 
+	else {
+		isDebugCameraActive_ = false;
+	} 
 	#endif
 	
 	if (isDebugCameraActive_) {
@@ -108,9 +118,7 @@ void GameScene::Update()
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
-	} else {
-		viewProjection_.UpdateMatrix();
-	}
+	} 
 }
 
 void GameScene::Draw() {
@@ -125,6 +133,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
+	
 	
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -142,6 +151,7 @@ void GameScene::Draw() {
 	//model_->Draw(worldTransform_, viewProjection_, textureHandle_);
 	player_->Draw(viewProjection_);
 	enemy_->Draw(viewProjection_);
+	skydome_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

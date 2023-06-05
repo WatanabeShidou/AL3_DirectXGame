@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "DebugCamera.h"
 #include "Enemy.h"
+#include "Skydome.h"
 
 
 /// <summary>
@@ -26,6 +27,8 @@ public: // メンバ関数
 	Player* player_ = nullptr;
 	Enemy* enemy_ = nullptr;
 	Model* model_ = nullptr;
+	Skydome* skydome_ = nullptr;
+	Model* modelSkydome_ = nullptr;
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 	void CheckAllCollisions();
