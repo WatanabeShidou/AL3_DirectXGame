@@ -18,22 +18,15 @@ public:
 	/// </summary>
 	/// <param name="model_"></param>
 	/// <param name="textureHandle_"></param>
-	void Initialize(Model* model, uint32_t textureHandle);
-	Vector3 GetWorldPosition(){
-		Vector3 worldPos;
-
-		worldPos.x = worldTranceform_.translation_.x;
-		worldPos.y = worldTranceform_.translation_.y;
-		worldPos.z = worldTranceform_.translation_.z;
-
-		return worldPos;
-	};
+	void Initialize(Model* model, uint32_t textureHandle, Vector3 position);
+	Vector3 GetWorldPosition();
 	void OnCollision();
 	const float GetRadius() { return radius_; }
 	const float radius_ = 1.0f;
 	Input* input_ = nullptr;
 	std::list<PlayerBullet*> bullets_;
 	const std::list<PlayerBullet*>& GetBullet() { return bullets_; }
+	
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -58,6 +51,8 @@ public:
 	/// 攻撃
 	/// </summary>
 	void Attack();
+
+	void SetParent(const WorldTransform* parent);
 
 private:
 	WorldTransform worldTranceform_;

@@ -2,8 +2,8 @@
 #include <cassert>
 #include "ImGuiManager.h"
 
-void Player::Initialize(Model* model, uint32_t textureHandle) {
-	
+void Player::Initialize(Model* model, uint32_t textureHandle,Vector3 position) {
+	worldTranceform_.translation_ = position;
 	assert(model);
 	
 	model_ = model;
@@ -12,6 +12,17 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	worldTranceform_.Initialize();
 	input_ = Input::GetInstance();
 }
+
+Vector3 Player::GetWorldPosition() {
+	
+	Vector3 worldPos;
+	worldPos.x = worldTranceform_.matWorld_.m[3][0];
+	worldPos.y = worldTranceform_.matWorld_.m[3][1];
+	worldPos.z = worldTranceform_.matWorld_.m[3][2];
+
+	return worldPos;
+};
+
 
 
 
@@ -76,12 +87,8 @@ void Player::Update() {
 	worldTranceform_.translation_.y += move.y;
 	worldTranceform_.translation_.z += move.z;
 
-	worldTranceform_.matWorld_ = MakeAffineMatrix(
-	    worldTranceform_.scale_, 
-		worldTranceform_.rotation_,
-		worldTranceform_.translation_);
-	
-	
+	worldTranceform_.UpdateMatrix();
+
 	ImGui::Begin("Debug1");
 	float inPutFloat[3] = {
 	    worldTranceform_.translation_.x, worldTranceform_.translation_.y,
@@ -110,8 +117,10 @@ void Player::Attack() {
 		velocity = TransformNormal(velocity, worldTranceform_.matWorld_);
 		
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTranceform_.translation_,velocity);
+		newBullet->Initialize(model_, GetWorldPosition(), velocity);
 
 		bullets_.push_back(newBullet);
 	}
 }
+
+void Player::SetParent(const WorldTransform* parent) { worldTranceform_.parent_ = parent; }

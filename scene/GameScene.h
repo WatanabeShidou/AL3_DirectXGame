@@ -12,6 +12,7 @@
 #include "DebugCamera.h"
 #include "Enemy.h"
 #include "Skydome.h"
+#include "RailCamera.h"
 
 
 /// <summary>
@@ -28,6 +29,7 @@ public: // メンバ関数
 	Enemy* enemy_ = nullptr;
 	Model* model_ = nullptr;
 	Skydome* skydome_ = nullptr;
+	RailCamera* railCamera_ = nullptr;
 	Model* modelSkydome_ = nullptr;
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
