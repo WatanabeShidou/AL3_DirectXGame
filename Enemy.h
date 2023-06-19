@@ -8,17 +8,18 @@
 #include <list>
 #include "Mathutility.h"
 
-
+class GameScene;
 class Player;
 /// <summary>
 /// 敵
 /// </summary>
 class Enemy {
 public:
+	
 	void OnCollision();
 	const float GetRadius() { return radius_; }
 	const float radius_ = 1.0f;
-	const std::list<EnemyBullet*>& GetBullet() { return bullets_; }
+	
 	int timer_;
 	Vector3 start;
 	Vector3 end;
@@ -29,7 +30,7 @@ public:
 		Leave,
 	};
 	~Enemy();
-	std::list<EnemyBullet*> bullets_;
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -47,6 +48,8 @@ public:
 
 		return worldPos;
 	};
+	void SetGameScene(GameScene* gamescene) { gamescene_ = gamescene; }
+	bool GetisDead() { return isDead_; } bool isDead_ = false;
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -62,10 +65,13 @@ public:
 
 private:
 	WorldTransform worldTranceform_;
-
+	GameScene* gamescene_ = nullptr;
 	Model* model_ = nullptr;
 	Player* player_ = nullptr;
 	uint32_t textureHandle_ = 0;
 	EnemyBullet* bullet_ = nullptr;
 	Phase phase_ = Phase::start;
+	static const int32_t kLifeTime = 60 * 5;
+	int32_t deathTimer_ = kLifeTime;
+	
 };

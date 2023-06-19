@@ -1,13 +1,12 @@
 ﻿#include "Enemy.h"
 #include <cassert>
 #include "Player.h"
+#include "GameScene.h"
 
 void Enemy::OnCollision() {}
 
 Enemy::~Enemy() {
-	for (EnemyBullet* bullet : bullets_) {
-		delete bullet;
-	}
+	
 }
 
 void Enemy::Initialize(Model* model, const Vector3& position) {
@@ -22,13 +21,7 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 }
 
 void Enemy::Update() {
-	bullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
+	
 	worldTranceform_.UpdateMatrix();
 	
 	/*switch(phase_) { 
@@ -42,22 +35,20 @@ void Enemy::Update() {
 	case Phase::Leave:
 		worldTranceform_.translation_.y += 0.3f;
 		worldTranceform_.translation_.x -= 0.3f;
-		break;
+		
+		//break;
 	}*/
 	Attack();
-
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Update();
-	}
+	//if (--deathTimer_ <= 0) {
+		//isDead_ = true;
+	//}
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection) 
 {
 	model_->Draw(worldTranceform_, viewProjection, textureHandle_);
 
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Draw(viewProjection);
-	}
+	
 }
 
 void Enemy::Attack() {
@@ -82,7 +73,7 @@ void Enemy::Attack() {
 		EnemyBullet* newBullet = new EnemyBullet();
 		newBullet->Initialize(model_, worldTranceform_.translation_, velocity);
 
-		bullets_.push_back(newBullet);
+		gamescene_->AddEnemyBullet(newBullet);
 		timer_ = 0;
 	}
 }

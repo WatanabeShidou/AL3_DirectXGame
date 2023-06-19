@@ -2,6 +2,8 @@
 #include "TextureManager.h"
 #include <cassert>
 #include "AxisIndicator.h"
+#include <iostream>
+#include <fstream>
 
 GameScene::GameScene() {}
 
@@ -10,7 +12,8 @@ void GameScene::CheckAllCollisions()
 	Vector3 posA, posB;
 
 	const std::list<PlayerBullet*>& playerBullets = player_->GetBullet();
-	const std::list<EnemyBullet*>& enemyBullets = enemy_->GetBullet();
+	const std::list<EnemyBullet*>& enemyBullets = bullets_;
+	const std::list<Enemy*>& Enemys_ = Enemys;
 
 	//自キャラと敵弾の当たり判定
 	posA = player_->GetWorldPosition();
@@ -26,15 +29,17 @@ void GameScene::CheckAllCollisions()
 		}
 	}
 	//敵キャラと自弾の判定
-	posA = enemy_->GetWorldPosition();
-	for (PlayerBullet* bullets : playerBullets) {
-		posB = bullets->GetWorldPosition();
-		float dis = (posB.x - posA.x) * (posB.x - posA.x) + 
-					(posB.y - posA.y) * (posB.y - posA.y) +
-		            (posB.z - posA.z) * (posB.z - posA.z);
-		if (dis <= (player_->GetRadius() + bullets->GetRadius()) * 2) {
-			enemy_->OnCollision();
-			bullets->OnCollision();
+	for (Enemy* Enemy_ : Enemys_) {
+		posA = Enemy_->GetWorldPosition();
+		for (PlayerBullet* bullets : playerBullets) {
+			posB = bullets->GetWorldPosition();
+			float dis = (posB.x - posA.x) * (posB.x - posA.x) +
+			            (posB.y - posA.y) * (posB.y - posA.y) +
+			            (posB.z - posA.z) * (posB.z - posA.z);
+			if (dis <= (Enemy_->GetRadius() + bullets->GetRadius()) * 2) {
+				Enemy_->OnCollision();
+				bullets->OnCollision();
+			}
 		}
 	}
 	
@@ -54,17 +59,82 @@ void GameScene::CheckAllCollisions()
 	}
 }
 
+void GameScene::LoadEnemyPopData() {
+	
+	std::ifstream file;
+	file.open("./Resources/EnemyPop.csv");
+	assert(file.is_open());
+
+	enemyPopCommands << file.rdbuf();
+
+	file.close();
+}
+
+void GameScene::UpdateEnemyPopCommands() {
+	
+	if (waitFlag) {
+		waitTimer--;
+		if (waitTimer <= 0) {
+			waitFlag = false;
+		}
+		return;
+	}
+
+	std::string line;
+	while (getline(enemyPopCommands, line)) {
+		std::istringstream line_stream(line);
+
+		std::string word;
+
+		getline(line_stream, word, ',');
+
+		if (word.find("//") == 0) {
+			continue;
+		}
+
+		if (word.find("POP") == 0) {
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			AddEnemy(Vector3(x, y, z));
+		} 
+		else if (word.find("WAIT") == 0) {
+			getline(line_stream, word, ',');
+
+			int32_t waitTime = atoi(word.c_str());
+
+			waitFlag = true;
+			waitTimer = waitTime;
+
+			break;
+		}
+	}
+}
+
 GameScene::~GameScene() {
+	for (EnemyBullet* bullet : bullets_) {
+		delete bullet;
+	}
 	delete model_;
 	delete player_;
 	delete debugCamera_;
-	delete enemy_;
+	for (Enemy* Enemy : Enemys) {
+		delete Enemy;
+	}
+	
 	delete skydome_;
 	delete modelSkydome_;
 	delete railCamera_;
 }
 
 void GameScene::Initialize() {
+	LoadEnemyPopData();
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
@@ -86,6 +156,7 @@ void GameScene::Initialize() {
 
 	enemy_ = new Enemy();
 	enemy_->Initialize(model_,enemy);
+	
 
 	player_ = new Player();
 	player_->Initialize(model_,textureHandle_,playerPosition);
@@ -103,16 +174,54 @@ void GameScene::Initialize() {
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 
 	enemy_->SetPlayer(player_);
+	enemy_->SetGameScene(this);
+	//AddEnemy({0.f, 5.f, 30.f});
+	//AddEnemy({0.f, 8.f, 30.f});
+	
+	
 }
 
-void GameScene::Update() 
-{
+void GameScene::AddEnemyBullet(EnemyBullet* enemybullet) {
+	bullets_.push_back(enemybullet); }
+
+
+
+void GameScene::AddEnemy(Vector3 pos) {
+	Enemy* obj = new Enemy();
+	obj->Initialize(model_, pos);
+	obj->SetPlayer(player_);
+	obj->SetGameScene(this);
+	Enemys.push_back(obj);
+}
+
+void GameScene::Update() {
 	player_->Update();
+	UpdateEnemyPopCommands();
+	bullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+	
+	Enemys.remove_if([](Enemy* enemy) {
+		if (enemy->GetisDead()) {
+			delete enemy;
+			return true;
+		}
+		return false;
+	});
+
+	for (EnemyBullet* bullet : bullets_) {
+		bullet->Update();
+	}
+	for (Enemy* Enemy : Enemys) {
+		Enemy->Update();
+	}
+	
 	player_->Rotate();
-	
-	enemy_->Update();
 	skydome_->Update();
-	
 	
 	#ifdef _DEBUG
 	if (input_->PushKey(DIK_Z)) {
@@ -166,9 +275,13 @@ void GameScene::Draw() {
 	/// </summary>
 	//model_->Draw(worldTransform_, viewProjection_, textureHandle_);
 	player_->Draw(viewProjection_);
-	enemy_->Draw(viewProjection_);
+	for (Enemy* Enemy : Enemys) {
+		Enemy->Draw(viewProjection_);
+	}
 	skydome_->Draw(viewProjection_);
-
+	for (EnemyBullet* bullet : bullets_) {
+		bullet->Draw(viewProjection_);
+	}
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion

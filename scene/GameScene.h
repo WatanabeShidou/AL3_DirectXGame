@@ -13,6 +13,7 @@
 #include "Enemy.h"
 #include "Skydome.h"
 #include "RailCamera.h"
+#include <sstream>
 
 
 /// <summary>
@@ -34,6 +35,20 @@ public: // メンバ関数
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 	void CheckAllCollisions();
+
+	/// <summary>
+	/// 敵発生データの読み込み
+	/// </summary>
+	void LoadEnemyPopData();
+
+	/// <summary>
+	/// 敵発生コマンドの更新
+	/// </summary>
+	void UpdateEnemyPopCommands();
+
+	bool waitFlag;
+	int waitTimer;
+
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -45,6 +60,10 @@ public: // メンバ関数
 	void Initialize();
 	DebugCamera* debugCamera_ = nullptr;
 	bool isDebugCameraActive_ = false;
+	std::list<EnemyBullet*> bullets_;
+	
+	std::list<Enemy*> Enemys;
+	void AddEnemy(Vector3 pos);
 
 	/// <summary>
 	/// 毎フレーム処理
@@ -55,6 +74,14 @@ public: // メンバ関数
 	/// 描画
 	/// </summary>
 	void Draw();
+
+	/// <summary>
+	/// 敵弾を追加
+	/// </summary>
+	/// <param name="enemybullet"></param>
+	void AddEnemyBullet(EnemyBullet* enemybullet);
+	std::stringstream enemyPopCommands;
+	
 
 
 private: // メンバ変数
@@ -67,5 +94,4 @@ private: // メンバ変数
 	uint32_t textureHandle_ = 0;
 	//テクスチャハンドル
 	
-	/// </summary>
 };
