@@ -34,6 +34,7 @@ public: // メンバ関数
 	Model* modelSkydome_ = nullptr;
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
+	
 	void CheckAllCollisions();
 
 	/// <summary>

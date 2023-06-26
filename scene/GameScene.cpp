@@ -10,7 +10,7 @@ GameScene::GameScene() {}
 void GameScene::CheckAllCollisions() 
 { 
 	Vector3 posA, posB;
-
+	
 	const std::list<PlayerBullet*>& playerBullets = player_->GetBullet();
 	const std::list<EnemyBullet*>& enemyBullets = bullets_;
 	const std::list<Enemy*>& Enemys_ = Enemys;
@@ -138,7 +138,7 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	
+	TextureManager::Load("target.png");
 	textureHandle_ = TextureManager::Load("sumire2.png");
 	model_ = Model::Create();
 	worldTransform_.Initialize();
@@ -160,7 +160,6 @@ void GameScene::Initialize() {
 
 	player_ = new Player();
 	player_->Initialize(model_,textureHandle_,playerPosition);
-	
 
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	skydome_ = new Skydome();
@@ -195,7 +194,7 @@ void GameScene::AddEnemy(Vector3 pos) {
 }
 
 void GameScene::Update() {
-	player_->Update();
+	
 	UpdateEnemyPopCommands();
 	bullets_.remove_if([](EnemyBullet* bullet) {
 		if (bullet->IsDead()) {
@@ -222,7 +221,7 @@ void GameScene::Update() {
 	
 	player_->Rotate();
 	skydome_->Update();
-	
+	player_->Update(&viewProjection_);
 	#ifdef _DEBUG
 	if (input_->PushKey(DIK_Z)) {
 		isDebugCameraActive_ = true;
@@ -243,7 +242,9 @@ void GameScene::Update() {
 		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
 	}
+	
 	CheckAllCollisions();
+	
 }
 
 void GameScene::Draw() {
@@ -293,7 +294,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-	
+	player_->DrawUI();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
