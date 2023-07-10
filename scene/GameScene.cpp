@@ -151,7 +151,7 @@ void GameScene::Initialize() {
 	};
 
 	Vector3 playerPosition{
-		0,0,20
+		0,0,0
 	};
 
 	enemy_ = new Enemy();
@@ -167,7 +167,7 @@ void GameScene::Initialize() {
 
 	railCamera_ = new RailCamera();
 	railCamera_->Initialize(worldTransform_.translation_,worldTransform_.rotation_);
-	player_->SetParent(&railCamera_->GetWorldTransform());
+	//player_->SetParent(&railCamera_->GetWorldTransform());
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
@@ -236,12 +236,12 @@ void GameScene::Update() {
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
-	} else if (!isDebugCameraActive_) {
+	}/* else if (!isDebugCameraActive_) {
 		railCamera_->Update();
 		viewProjection_.matView = railCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
-	}
+	}*/
 	
 	CheckAllCollisions();
 	
