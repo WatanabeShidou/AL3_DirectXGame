@@ -3,11 +3,12 @@
 #include "ViewProjection.h"
 #include "Model.h"
 #include "Input.h"
+#include "Collider.h"
 
 /// <summary>
 /// 敵の玉
 /// </summary>
-class EnemyBullet {
+class EnemyBullet : public Collider {
 public:
 	/// <summary>
 	/// 初期化
@@ -20,10 +21,12 @@ public:
 	int32_t deathTimer_ = kLifeTime;
 	bool isDead_ = false;
 	bool IsDead() const { return isDead_; }
-	void OnCollision();
+	//void OnCollision();
+	void OnCollision() override;
 	const float GetRadius() { return radius_; }
 	const float radius_ = 1.0f;
-	Vector3 GetWorldPosition() {
+	//Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() override {
 		Vector3 worldPos;
 
 		worldPos.x = worldTranceform_.translation_.x;

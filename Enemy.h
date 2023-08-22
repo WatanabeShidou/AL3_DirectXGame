@@ -7,16 +7,18 @@
 #include "EnemyBullet.h"
 #include <list>
 #include "Mathutility.h"
+#include "Collider.h"
 
 class GameScene;
 class Player;
 /// <summary>
 /// 敵
 /// </summary>
-class Enemy {
+class Enemy : public Collider {
 public:
 	
-	void OnCollision();
+	//void OnCollision();
+	void OnCollision() override;
 	const float GetRadius() { return radius_; }
 	const float radius_ = 1.0f;
 	
@@ -39,7 +41,8 @@ public:
 	void Initialize(Model* model, const Vector3& position);
 	Vector3 velocity_;
 	void SetPlayer(Player* player) { player_ = player; }
-	Vector3 GetWorldPosition() {
+	//Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() override {
 		Vector3 worldPos;
 
 		worldPos.x = worldTranceform_.translation_.x;
@@ -49,7 +52,8 @@ public:
 		return worldPos;
 	};
 	void SetGameScene(GameScene* gamescene) { gamescene_ = gamescene; }
-	bool GetisDead() { return isDead_; } bool isDead_ = false;
+	bool GetisDead() { return isDead_; } 
+	bool isDead_ = false;
 	/// <summary>
 	/// 更新
 	/// </summary>

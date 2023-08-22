@@ -9,53 +9,69 @@ GameScene::GameScene() {}
 
 void GameScene::CheckAllCollisions() 
 { 
-	Vector3 posA, posB;
-	
+	//Vector3 posA, posB;
+	//
 	const std::list<PlayerBullet*>& playerBullets = player_->GetBullet();
 	const std::list<EnemyBullet*>& enemyBullets = bullets_;
 	const std::list<Enemy*>& Enemys_ = Enemys;
 
-	//自キャラと敵弾の当たり判定
-	posA = player_->GetWorldPosition();
-	for (EnemyBullet* bullets: enemyBullets) {
-		posB = bullets->GetWorldPosition();
+	////自キャラと敵弾の当たり判定
+	//posA = player_->GetWorldPosition();
+	//for (EnemyBullet* bullets: enemyBullets) {
+	//	posB = bullets->GetWorldPosition();
 
-		float dis = (posB.x - posA.x) * (posB.x - posA.x) + 
-					(posB.y - posA.y) * (posB.y - posA.y) +
-		            (posB.z - posA.z) * (posB.z - posA.z);
-		if (dis <= (player_->GetRadius() + bullets->GetRadius())*2) {
-			player_->OnCollision();
-			bullets->OnCollision();
-		}
-	}
-	//敵キャラと自弾の判定
-	for (Enemy* Enemy_ : Enemys_) {
-		posA = Enemy_->GetWorldPosition();
-		for (PlayerBullet* bullets : playerBullets) {
-			posB = bullets->GetWorldPosition();
-			float dis = (posB.x - posA.x) * (posB.x - posA.x) +
-			            (posB.y - posA.y) * (posB.y - posA.y) +
-			            (posB.z - posA.z) * (posB.z - posA.z);
-			if (dis <= (Enemy_->GetRadius() + bullets->GetRadius()) * 2) {
-				Enemy_->OnCollision();
-				bullets->OnCollision();
-			}
-		}
-	}
-	
-	//敵弾と自弾の判定
+	//	float dis = (posB.x - posA.x) * (posB.x - posA.x) + 
+	//				(posB.y - posA.y) * (posB.y - posA.y) +
+	//	            (posB.z - posA.z) * (posB.z - posA.z);
+	//	if (dis <= (player_->GetRadius() + bullets->GetRadius())*2) {
+	//		player_->OnCollision();
+	//		bullets->OnCollision();
+	//	}
+	//}
+	////敵キャラと自弾の判定
+	//for (Enemy* Enemy_ : Enemys_) {
+	//	posA = Enemy_->GetWorldPosition();
+	//	for (PlayerBullet* bullets : playerBullets) {
+	//		posB = bullets->GetWorldPosition();
+	//		float dis = (posB.x - posA.x) * (posB.x - posA.x) +
+	//		            (posB.y - posA.y) * (posB.y - posA.y) +
+	//		            (posB.z - posA.z) * (posB.z - posA.z);
+	//		if (dis <= (Enemy_->GetRadius() + bullets->GetRadius()) * 2) {
+	//			Enemy_->OnCollision();
+	//			bullets->OnCollision();
+	//		}
+	//	}
+	//}
+	//
+	////敵弾と自弾の判定
+	//for (PlayerBullet* playerbullets : playerBullets) {
+	//	posA = playerbullets->GetWorldPosition();
+	//	for (EnemyBullet* enemybullets : enemyBullets) {
+	//		posB = enemybullets->GetWorldPosition();
+	//		float dis = (posB.x - posA.x) * (posB.x - posA.x) +
+	//		            (posB.y - posA.y) * (posB.y - posA.y) +
+	//		            (posB.z - posA.z) * (posB.z - posA.z);
+	//		if (dis <= (playerbullets->GetRadius() + enemybullets->GetRadius()) * 2) {
+	//			enemybullets->OnCollision();
+	//			playerbullets->OnCollision();
+	//		}
+	//	}
+	//}
+	// 敵弾と自弾の判定
 	for (PlayerBullet* playerbullets : playerBullets) {
-		posA = playerbullets->GetWorldPosition();
 		for (EnemyBullet* enemybullets : enemyBullets) {
-			posB = enemybullets->GetWorldPosition();
-			float dis = (posB.x - posA.x) * (posB.x - posA.x) +
-			            (posB.y - posA.y) * (posB.y - posA.y) +
-			            (posB.z - posA.z) * (posB.z - posA.z);
-			if (dis <= (playerbullets->GetRadius() + enemybullets->GetRadius()) * 2) {
-				enemybullets->OnCollision();
-				playerbullets->OnCollision();
-			}
+			ChackCollisionPair(playerbullets, enemybullets);
 		}
+	}
+	// 敵キャラと自弾の判定
+	for (Enemy* Enemy_ : Enemys_) {
+		for (PlayerBullet* bullets : playerBullets) {
+			ChackCollisionPair(Enemy_, bullets);
+		}
+	}
+	// 自キャラと敵弾の当たり判定
+	for (EnemyBullet* bullets : enemyBullets) {
+		ChackCollisionPair(player_,bullets);
 	}
 }
 
@@ -180,8 +196,21 @@ void GameScene::Initialize() {
 	
 }
 
-void GameScene::AddEnemyBullet(EnemyBullet* enemybullet) {
-	bullets_.push_back(enemybullet); }
+void GameScene::AddEnemyBullet(EnemyBullet* enemybullet) { bullets_.push_back(enemybullet); }
+
+void GameScene::ChackCollisionPair(Collider* colliderA, Collider* colliderB) {
+	Vector3 posA, posB;
+	//colliderA->SetRadius(player_->radius_);
+	posA = colliderA->GetWorldPosition();
+	posB = colliderB->GetWorldPosition();
+	float dis = (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
+	            (posB.z - posA.z) * (posB.z - posA.z);
+	if (dis <= (colliderA->GetRadius() + colliderB->GetRadius() * 2)) {
+		colliderA->OnCollision();
+		colliderB->OnCollision();
+	}
+
+}
 
 
 

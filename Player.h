@@ -8,12 +8,13 @@
 #include "Mathutility.h"
 #include <Sprite.h>
 #include <cassert>
+#include "Collider.h"
 
 
 /// <summary>
 /// 自キャラ
 /// </summary>
-class Player {
+class Player : public Collider{
 public:
 	/// <summary>
 	/// 初期化
@@ -21,8 +22,10 @@ public:
 	/// <param name="model_"></param>
 	/// <param name="textureHandle_"></param>
 	void Initialize(Model* model, uint32_t textureHandle, Vector3 position);
-	Vector3 GetWorldPosition();
-	void OnCollision();
+	//Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() override;
+	//void OnCollision();
+	void OnCollision() override;
 	const float GetRadius() { return radius_; }
 	const float radius_ = 1.0f;
 	Input* input_ = nullptr;

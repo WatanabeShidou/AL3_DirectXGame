@@ -14,12 +14,13 @@
 #include "Skydome.h"
 #include "RailCamera.h"
 #include <sstream>
+#include "Collider.h"
 
 
 /// <summary>
 /// ゲームシーン
 /// </summary>
-class GameScene {
+class GameScene : public Collider {
 
 public: // メンバ関数
 	/// <summary>
@@ -94,5 +95,5 @@ private: // メンバ変数
 	/// ゲームシーン用
 	uint32_t textureHandle_ = 0;
 	//テクスチャハンドル
-	
+	void ChackCollisionPair(Collider* colliderA, Collider* colliderB);
 };
