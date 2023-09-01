@@ -5,19 +5,21 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	assert(model);
 	model_ = model;
 	textureHandle_ = TextureManager::Load("cube.jpg");
-	worldTranceform_.Initialize();
-	
-	worldTranceform_.translation_ = position;
+	worldTransform_.Initialize();
+	worldTransform_.scale_.x = 0.5f;
+	worldTransform_.scale_.y = 0.5f;
+	worldTransform_.scale_.z = 0.5f;
+	worldTransform_.translation_ = position;
 	velocity_ = velocity;
 }
 
 void PlayerBullet::OnCollision() { isDead_ = true; }
 
 void PlayerBullet::Update() { 
-	worldTranceform_.translation_.x += velocity_.x;
-	worldTranceform_.translation_.y += velocity_.y;
-	worldTranceform_.translation_.z += velocity_.z;
-	worldTranceform_.UpdateMatrix(); 
+	worldTransform_.translation_.x += velocity_.x;
+	worldTransform_.translation_.y += velocity_.y;
+	worldTransform_.translation_.z += velocity_.z;
+	worldTransform_.UpdateMatrix(); 
 	if (--deathTimer_ <= 0) {
 		isDead_ = true;
 	}
@@ -25,5 +27,5 @@ void PlayerBullet::Update() {
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection) 
 {	
-	model_->Draw(worldTranceform_, viewProjection, textureHandle_);
+	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }

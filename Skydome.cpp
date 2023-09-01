@@ -6,16 +6,22 @@ void Skydome::Initialize(Model* model)
 	assert(model);
 	model_ = model;
 
-	worldTranceform_.Initialize();
-	worldTranceform_.translation_ = {0, 0, 0};
+	worldTransform_.Initialize();
+	
+	worldTransform_.translation_ = {0, 0, 0};
 }
 
 void Skydome::Update() 
 { 
-	worldTranceform_.UpdateMatrix();
+	worldTransform_.UpdateMatrix();
+	//
+	//if (worldTransform_.translation_.z <= 20.0f) {
+	//	//worldTransform_.translation_.z = 0.0f;
+	//	worldTransform_.translation_.z += move.z;
+	//}
 }
 
 void Skydome::Draw(const ViewProjection& viewProjection) 
 { 
-	model_->Draw(worldTranceform_, viewProjection);
+	model_->Draw(worldTransform_, viewProjection);
 }

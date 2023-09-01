@@ -48,9 +48,15 @@ public: // メンバ関数
 	/// </summary>
 	void UpdateEnemyPopCommands();
 
+	void SetPhase(int phase) { phase = phaseNumber_; }
+
 	bool waitFlag;
 	int waitTimer;
-
+	int phaseNumber_;
+	int f;
+	int spawnTimer_;
+	int score_;
+	int plusScore_;
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -82,9 +88,11 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="enemybullet"></param>
 	void AddEnemyBullet(EnemyBullet* enemybullet);
-	std::stringstream enemyPopCommands;
-	
-
+	std::stringstream enemyPopCommands[10];
+	//std::stringstream enemyPopCommands1;
+	int enemyHP_;
+	int enemyAlive_[20];
+	int scene_;
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -94,6 +102,7 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	uint32_t textureHandle_ = 0;
+	uint32_t textureHandle1_ = 0;
 	//テクスチャハンドル
 	void ChackCollisionPair(Collider* colliderA, Collider* colliderB);
 };

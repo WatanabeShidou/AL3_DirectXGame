@@ -20,9 +20,10 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw(const ViewProjection& viewProjection);
+	Vector3 move = {0.f, 0.f, 0.1f};
 
 private:
-	WorldTransform worldTranceform_;
+	WorldTransform worldTransform_;
 
 	Model* model_ = nullptr;
 };

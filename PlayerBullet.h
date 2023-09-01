@@ -29,9 +29,9 @@ public:
 	{
 		Vector3 worldPos;
 
-		worldPos.x = worldTranceform_.translation_.x;
-		worldPos.y = worldTranceform_.translation_.y;
-		worldPos.z = worldTranceform_.translation_.z;
+		worldPos.x = worldTransform_.translation_.x;
+		worldPos.y = worldTransform_.translation_.y;
+		worldPos.z = worldTransform_.translation_.z;
 
 		return worldPos;
 	};
@@ -47,7 +47,7 @@ public:
 	void Draw(const ViewProjection& viewProjection);
 
 private:
-	WorldTransform worldTranceform_;
+	WorldTransform worldTransform_;
 
 	Model* model_ = nullptr;
 

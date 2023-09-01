@@ -31,7 +31,7 @@ public:
 	Input* input_ = nullptr;
 	std::list<PlayerBullet*> bullets_;
 	const std::list<PlayerBullet*>& GetBullet() { return bullets_; }
-	
+	int attackTimer_;
 
 	Vector3 Normalize(const Vector3& v) {
 		Vector3 result;
@@ -67,7 +67,7 @@ public:
 	}
 
 	WorldTransform worldTransform3DReticle_;
-
+	float playerHP_;
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -77,7 +77,7 @@ public:
 	/// 
 	/// </summary>
 	void DrawUI();
-
+	void Draw2D();
 	/// <summary>
 	/// 回転
 	/// </summary>
@@ -118,11 +118,13 @@ public:
 		result.z /= w;
 		return result;
 	}
-
+	WorldTransform worldTransform_;
 private:
-	WorldTransform worldTranceform_;
+	
 	Model* model_ = nullptr;
 	Sprite* sprite2DReticle_ = nullptr;
+	Sprite* sprite2D = nullptr;
 	uint32_t textureHandle_ = 0;
 	PlayerBullet* bullet_ = nullptr;
+	
 };
